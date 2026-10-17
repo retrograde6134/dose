@@ -1,6 +1,7 @@
 package ca.alexlittle.dose.data.db
 
 import androidx.room.TypeConverter
+import ca.alexlittle.dose.domain.model.DoseStatus
 import ca.alexlittle.dose.domain.model.MedicationForm
 import java.math.BigDecimal
 import java.time.Instant
@@ -24,4 +25,10 @@ internal class Converters {
 
     @TypeConverter
     fun stringToForm(value: String): MedicationForm = MedicationForm.valueOf(value)
+
+    @TypeConverter
+    fun doseStatusToString(status: DoseStatus): String = status.name
+
+    @TypeConverter
+    fun stringToDoseStatus(value: String): DoseStatus = DoseStatus.valueOf(value)
 }

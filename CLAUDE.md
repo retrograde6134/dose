@@ -127,7 +127,7 @@ Keep the schedule definition separate from the dose log. **Never store future do
 
 - `Medication`: id, name, strengthValue, strengthUnit, form, colorArgb, iconKey, notes, instructions, archived, createdAt
 - `Schedule`: id, medicationId, type (DAILY, WEEKDAYS, INTERVAL, CYCLIC, PRN), params (days of week bitmask, interval N, on/off counts), startDate, endDate?, timesOfDay (list of `LocalTime`), doseQuantity (decimal), minIntervalMinutes? (PRN)
-- `DoseLog`: id, medicationId, scheduleId?, scheduledAt (UTC instant, nullable for PRN), takenAt (UTC instant, nullable), status (TAKEN, SKIPPED, MISSED, SNOOZED_PENDING), quantity, note
+- `DoseLog`: id, medicationId, scheduleId? (set null if the schedule is deleted), scheduledAt (UTC instant, nullable for PRN), takenAt (UTC instant, nullable), status (TAKEN, SKIPPED, MISSED, SNOOZED_PENDING), quantity, note, snoozedUntil (UTC instant, set only while SNOOZED_PENDING, so a snooze survives a reboot). Unique index on (scheduleId, scheduledAt).
 - `Supply` (Phase 2): medicationId, remaining, lowThreshold
 
 Time handling decisions (do not change without discussion):
