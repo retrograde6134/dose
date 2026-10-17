@@ -94,6 +94,7 @@ app/src/main/java/ca/alexlittle/dose/
 │   └── backup/                 # JSON export/import
 ├── domain/
 │   ├── model/                  # Pure Kotlin models (no Android imports)
+│   ├── repository/             # Repository interfaces (implemented in data/repository)
 │   ├── schedule/               # Recurrence engine: schedule -> list of dose instants
 │   └── usecase/                # TakeDose, SkipDose, SnoozeDose, GetTodayDoses, etc.
 ├── reminders/
