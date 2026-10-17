@@ -4,7 +4,7 @@ Guidance for Claude Code when working in this repository.
 
 ## Project
 
-**Working name:** Dose (rename freely)
+**App name:** Dose · **applicationId / package:** `ca.alexlittle.dose`
 
 A fast, private, offline-first medication reminder app for Android, written in Kotlin. It does what Medisafe's core does (remind you to take your meds, track whether you did, track supply) and nothing else. No accounts, no ads, no upsells, no social features, no "Medfriends", no analytics, no network calls.
 
@@ -63,14 +63,14 @@ Accounts, cloud sync, caregiver/family sharing, drug database, interaction check
 |---|---|
 | Language | Kotlin (latest stable), coroutines + Flow |
 | UI | Jetpack Compose, Material 3, Navigation Compose |
-| Persistence | Room (with schema export enabled) |
+| Persistence | Room 2.x (`androidx.room`, with schema export enabled). Decided: stay on Room 2 rather than Room 3 (`androidx.room3`) |
 | Settings | Jetpack DataStore (Preferences) |
-| DI | Hilt (or Koin if Hilt proves heavy; decide once, then stay consistent) |
+| DI | Hilt (KSP). Decided; do not switch to Koin |
 | Scheduling | `AlarmManager` exact alarms for reminders; `WorkManager` only for housekeeping (e.g. rescheduling, missed-dose sweep) |
 | Time | `java.time` (core library desugaring enabled for older API levels) |
 | Widgets | Jetpack Glance (Phase 2) |
 | Build | Gradle Kotlin DSL, version catalog (`gradle/libs.versions.toml`) |
-| Lint/format | ktlint + detekt |
+| Lint/format | ktlint (`android_studio` style, trailing commas allowed) + detekt 2.0.0-alpha (deliberate pre-release: 1.23.x cannot parse Kotlin 2.4 or run on JDK 25). **Move to detekt 2.0 stable as soon as it is released.**. Config in `config/detekt/detekt.yml` |
 | Tests | JUnit, Turbine, MockK, Room in-memory, Compose UI tests, Robolectric where sensible |
 
 Always use the latest stable versions from the version catalog. Never hard-code dependency versions in module build files. Do not add a dependency without a one-line justification in the PR/commit message.
@@ -83,9 +83,10 @@ Always use the latest stable versions from the version catalog. Never hard-code 
 Single-module to start (`app`), with strict package boundaries so it can be split later. Unidirectional data flow. MVVM with a clean-ish domain layer.
 
 ```
-app/src/main/java/<package>/
+app/src/main/java/ca/alexlittle/dose/
 ├── DoseApp.kt                  # Application, Hilt entry, notification channels
 ├── MainActivity.kt
+├── di/                         # Hilt modules, qualifiers (Clock, dispatchers)
 ├── data/
 │   ├── db/                     # Room: entities, DAOs, database, migrations, converters
 │   ├── repository/             # Repository implementations
@@ -168,7 +169,7 @@ Before declaring any task done, run at minimum: `./gradlew ktlintCheck detekt te
 - **DAOs**: Room in-memory tests, including migrations (`MigrationTestHelper`). Every schema change needs a migration and a migration test. No destructive migrations.
 - **UI**: Compose tests for the Today screen take/skip flow and the schedule editor.
 - **Reminders**: test the scheduler with a fake `AlarmManager` wrapper. Keep Android framework calls behind thin interfaces so the logic stays testable.
-- Inject a `Clock` everywhere. Never call `Instant.now()` / `LocalDateTime.now()` directly in logic.
+- Inject a `Clock` everywhere. Never call `Instant.now()` / `LocalDateTime.now()` directly in logic. The app-wide `Clock` is `util/SystemZoneClock`, which re-reads the device zone on every call (`Clock.systemDefaultZone()` would freeze the zone).
 
 ## Code style
 
@@ -194,7 +195,7 @@ Before declaring any task done, run at minimum: `./gradlew ktlintCheck detekt te
 ## Privacy and security
 
 - No `INTERNET` permission. If a task seems to need it, stop and ask.
-- Disable or tightly control Android Auto Backup: either exclude the database or document that it is included, and let the user choose. Default to **excluded** unless told otherwise.
+- Android Auto Backup is **off** (decided): `android:allowBackup="false"`, and `data_extraction_rules.xml` excludes every domain from cloud backup and device-to-device transfer. Backup is the user-initiated JSON export only.
 - Do not log medication names or any health data to Logcat in release builds.
 - Notifications on the lock screen: provide a setting to hide medication names (`VISIBILITY_PRIVATE` with a public version).
 - JSON export is plain, documented, and versioned (`"schemaVersion"`). Import validates strictly and never silently overwrites data without confirmation.
@@ -218,10 +219,15 @@ A task is done when:
 4. User-facing strings are in resources and the UI works in dark mode and at large font size.
 5. It was verified on an emulator or device where behavior depends on the Android framework (notifications, alarms, permissions), or you stated clearly that it was not.
 
+## Decided
+
+- App name "Dose", applicationId and package `ca.alexlittle.dose`
+- Hilt for DI
+- Room 2.x (not Room 3)
+- Auto Backup off
+- detekt 2.0.0-alpha until 2.0 stable ships, then upgrade
+
 ## Open decisions (ask the owner before assuming)
 
-- Final app name and applicationId
-- Hilt vs Koin
 - `USE_EXACT_ALARM` vs `SCHEDULE_EXACT_ALARM` strategy
-- Whether to include Auto Backup at all
 - Licensing (suggest GPLv3 or Apache-2.0) and distribution (F-Droid / Play Store)
