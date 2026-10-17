@@ -1,15 +1,30 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+# Gradle
+.gradle/
+build/
+.kotlin/
+
+# Local configuration (SDK path, signing secrets)
 local.properties
+*.keystore
+*.jks
+keystore.properties
+
+# Android Studio / IntelliJ: per-machine state. Code style lives in .editorconfig instead.
+*.iml
+.idea/
+
+# Native builds
+.externalNativeBuild/
+.cxx/
+
+# Captures and generated files
+captures/
+*.apk
+*.aab
+*.ap_
+*.hprof
+output-metadata.json
+
+# OS
+.DS_Store
+Thumbs.db
