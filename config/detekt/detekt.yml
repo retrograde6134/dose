@@ -1,0 +1,21 @@
+# Overrides on top of detekt's default config (buildUponDefaultConfig = true).
+# Compose conventions: PascalCase @Composable functions, many hoisted parameters,
+# and Unit-returning composables that "do nothing" from detekt's point of view.
+
+naming:
+  FunctionNaming:
+    ignoreAnnotated:
+      - Composable
+
+complexity:
+  LongParameterList:
+    ignoreAnnotated:
+      - Composable
+
+style:
+  UnusedPrivateFunction:
+    ignoreAnnotated:
+      - Preview
+  MagicNumber:
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
