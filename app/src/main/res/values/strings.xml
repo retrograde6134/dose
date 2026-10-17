@@ -2,4 +2,85 @@
     <string name="app_name">Dose</string>
     <string name="today_title">Today</string>
     <string name="today_empty">Nothing scheduled for today.</string>
+    <string name="today_open_medications">Medications</string>
+
+    <string name="navigate_back">Back</string>
+
+    <!-- Medication list -->
+    <string name="medications_title">Medications</string>
+    <string name="medications_empty">No medications yet. Add one to get started.</string>
+    <string name="medications_add">Add medication</string>
+    <string name="medications_archived_header">Archived (%1$d)</string>
+    <string name="medications_archived_show">Show archived medications</string>
+    <string name="medications_archived_hide">Hide archived medications</string>
+
+    <!-- Medication summary line, e.g. "500 mg · Tablet" -->
+    <string name="medication_strength">%1$s %2$s</string>
+    <string name="medication_summary">%1$s · %2$s</string>
+
+    <!-- Medication detail -->
+    <string name="medication_edit">Edit</string>
+    <string name="medication_archive">Archive</string>
+    <string name="medication_unarchive">Unarchive</string>
+    <string name="medication_delete">Delete</string>
+    <string name="medication_archived_label">Archived</string>
+    <string name="medication_archived_snackbar">Archived</string>
+    <string name="medication_undo">Undo</string>
+    <string name="medication_field_strength">Strength</string>
+    <string name="medication_field_form">Form</string>
+    <string name="medication_field_color">Color</string>
+    <string name="medication_field_instructions">Instructions</string>
+    <string name="medication_field_notes">Notes</string>
+    <string name="medication_delete_title">Delete %1$s?</string>
+    <string name="medication_delete_message">This permanently removes the medication and all of its history. To keep the history, archive it instead.</string>
+    <string name="medication_delete_confirm">Delete</string>
+    <string name="medication_delete_cancel">Cancel</string>
+
+    <!-- Medication edit -->
+    <string name="medication_add_title">Add medication</string>
+    <string name="medication_edit_title">Edit medication</string>
+    <string name="medication_save">Save</string>
+    <string name="medication_name_label">Name</string>
+    <string name="medication_strength_label">Strength (optional)</string>
+    <string name="medication_unit_label">Unit</string>
+    <string name="medication_instructions_label">Instructions (optional)</string>
+    <string name="medication_instructions_hint">For example, take with food</string>
+    <string name="medication_notes_label">Notes (optional)</string>
+    <string name="medication_error_name_blank">Enter a name</string>
+    <string name="medication_error_strength_invalid">Enter a number, like 0.5</string>
+    <string name="medication_error_strength_not_positive">Enter an amount above zero</string>
+    <string name="medication_error_unit_missing">Enter a unit, like mg</string>
+
+    <!-- Symbols, the same in every language -->
+    <string-array name="medication_unit_suggestions" translatable="false">
+        <item>mg</item>
+        <item>mcg</item>
+        <item>g</item>
+        <item>mL</item>
+        <item>IU</item>
+        <item>%</item>
+    </string-array>
+
+    <!-- Medication forms -->
+    <string name="medication_form_tablet">Tablet</string>
+    <string name="medication_form_capsule">Capsule</string>
+    <string name="medication_form_liquid">Liquid</string>
+    <string name="medication_form_injection">Injection</string>
+    <string name="medication_form_drops">Drops</string>
+    <string name="medication_form_inhaler">Inhaler</string>
+    <string name="medication_form_other">Other</string>
+
+    <!-- Medication colors -->
+    <string name="medication_color_red">Red</string>
+    <string name="medication_color_orange">Orange</string>
+    <string name="medication_color_yellow">Yellow</string>
+    <string name="medication_color_green">Green</string>
+    <string name="medication_color_teal">Teal</string>
+    <string name="medication_color_blue">Blue</string>
+    <string name="medication_color_indigo">Indigo</string>
+    <string name="medication_color_purple">Purple</string>
+    <string name="medication_color_pink">Pink</string>
+    <string name="medication_color_brown">Brown</string>
+    <string name="medication_color_grey">Grey</string>
+    <string name="medication_color_custom">Custom color</string>
 </resources>

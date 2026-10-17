@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import java.time.Clock
+import java.util.Locale
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
@@ -14,6 +15,10 @@ import kotlinx.coroutines.Dispatchers
 internal object AppModule {
     @Provides
     fun provideClock(): Clock = SystemZoneClock
+
+    // Unscoped so each ViewModel picks up the locale current at its creation.
+    @Provides
+    fun provideLocale(): Locale = Locale.getDefault()
 
     @Provides
     @IoDispatcher

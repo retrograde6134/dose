@@ -21,7 +21,7 @@ class TodayScreenTest {
     @Test
     fun emptyStateIsShown() {
         composeRule.setContent {
-            DoseTheme { TodayScreen(uiState = TodayUiState.Empty) }
+            DoseTheme { TodayScreen(uiState = TodayUiState.Empty, onOpenMedications = {}) }
         }
 
         composeRule.onNodeWithText(context.getString(R.string.today_empty)).assertIsDisplayed()

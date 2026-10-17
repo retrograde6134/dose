@@ -11,6 +11,6 @@ import ca.alexlittle.dose.ui.theme.DoseTheme
 @Composable
 private fun TodayScreenEmptyPreview() {
     DoseTheme {
-        TodayScreen(uiState = TodayUiState.Empty)
+        TodayScreen(uiState = TodayUiState.Empty, onOpenMedications = {})
     }
 }
