@@ -100,6 +100,52 @@
     <string name="dose_quantity_inhaler">{0, plural, one {# puff} other {# puffs}}</string>
     <string name="dose_quantity_other">{0, plural, one {# dose} other {# doses}}</string>
 
+    <!-- Schedule edit -->
+    <string name="schedule_add_title">Add schedule</string>
+    <string name="schedule_edit_title">Edit schedule</string>
+    <string name="schedule_save">Save</string>
+    <string name="schedule_repeats_label">Repeats</string>
+    <string name="schedule_kind_daily">Every day</string>
+    <string name="schedule_kind_weekdays">Days of the week</string>
+    <string name="schedule_kind_interval">Every few days</string>
+    <string name="schedule_kind_cyclic">On and off</string>
+    <string name="schedule_kind_as_needed">As needed</string>
+    <string name="schedule_weekdays_label">On these days</string>
+    <plurals name="schedule_every_n_weeks">
+        <item quantity="one">Every week</item>
+        <item quantity="other">Every %d weeks</item>
+    </plurals>
+    <!-- %1$s is a number of days, e.g. "21 days" -->
+    <string name="schedule_cycle_on">%1$s on</string>
+    <string name="schedule_cycle_off">%1$s off</string>
+    <string name="schedule_min_interval_label">Minimum time between doses</string>
+    <string name="schedule_min_interval_none">No minimum</string>
+    <string name="schedule_decrease">Decrease</string>
+    <string name="schedule_increase">Increase</string>
+    <string name="schedule_times_label">Times</string>
+    <string name="schedule_add_time">Add time</string>
+    <string name="schedule_change_time">Change time</string>
+    <!-- %1$s is a time, e.g. "8:00 AM" -->
+    <string name="schedule_remove_time">Remove %1$s</string>
+    <string name="schedule_quantity_label">Amount per dose</string>
+    <string name="schedule_start_label">Starts</string>
+    <string name="schedule_end_label">Ends</string>
+    <string name="schedule_end_never">No end date</string>
+    <string name="schedule_change_date">Change date</string>
+    <string name="schedule_remove_end">Remove end date</string>
+    <string name="schedule_picker_ok">OK</string>
+    <string name="schedule_picker_cancel">Cancel</string>
+    <string name="schedule_error_no_times">Add at least one time</string>
+    <string name="schedule_error_no_weekdays">Choose at least one day</string>
+    <string name="schedule_error_quantity_invalid">Enter a number, like 0.5</string>
+    <string name="schedule_error_quantity_not_positive">Enter an amount above zero</string>
+    <string name="schedule_error_end_before_start">The end date can\'t be before the start date</string>
+    <string name="schedule_delete">Delete schedule</string>
+    <string name="schedule_delete_title">Delete this schedule?</string>
+    <string name="schedule_delete_message">Reminders for it will stop.</string>
+    <string name="schedule_delete_confirm">Delete</string>
+    <string name="schedule_delete_cancel">Cancel</string>
+
     <!-- Symbols, the same in every language -->
     <string-array name="medication_unit_suggestions" translatable="false">
         <item>mg</item>

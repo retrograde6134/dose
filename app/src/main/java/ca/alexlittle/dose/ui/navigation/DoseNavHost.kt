@@ -11,6 +11,7 @@ import androidx.navigation.toRoute
 import ca.alexlittle.dose.ui.medications.detail.MedicationDetailRoute
 import ca.alexlittle.dose.ui.medications.edit.MedicationEditRoute
 import ca.alexlittle.dose.ui.medications.list.MedicationListRoute
+import ca.alexlittle.dose.ui.schedules.edit.ScheduleEditRoute
 import ca.alexlittle.dose.ui.today.TodayRoute
 
 // Navigation callbacks are wrapped in dropUnlessResumed so a double tap during a transition
@@ -44,13 +45,25 @@ internal fun DoseNavHost(modifier: Modifier = Modifier) {
                 medicationId = id,
                 onBack = dropUnlessResumed { navController.popBackStack() },
                 onEdit = dropUnlessResumed { navController.navigate(MedicationEditDestination(id)) },
-                onOpenSchedule = {},
-                onAddSchedule = {},
+                onOpenSchedule = { scheduleId ->
+                    if (entry.lifecycle.currentState == Lifecycle.State.RESUMED) {
+                        navController.navigate(ScheduleEditDestination(id, scheduleId))
+                    }
+                },
+                onAddSchedule = dropUnlessResumed { navController.navigate(ScheduleEditDestination(id)) },
             )
         }
         composable<MedicationEditDestination> { entry ->
             MedicationEditRoute(
                 medicationId = entry.toRoute<MedicationEditDestination>().id,
+                onDone = dropUnlessResumed { navController.popBackStack() },
+            )
+        }
+        composable<ScheduleEditDestination> { entry ->
+            val destination = entry.toRoute<ScheduleEditDestination>()
+            ScheduleEditRoute(
+                medicationId = destination.medicationId,
+                scheduleId = destination.scheduleId,
                 onDone = dropUnlessResumed { navController.popBackStack() },
             )
         }
