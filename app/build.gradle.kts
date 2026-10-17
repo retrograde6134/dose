@@ -41,6 +41,12 @@ android {
     buildFeatures {
         compose = true
     }
+    sourceSets {
+        // MigrationTestHelper reads exported schemas from assets. The Room plugin wires them only for
+        // androidTest, and Robolectric unit tests see the debug variant's assets, not the test source set's.
+        // Schema JSON in the debug APK is harmless; release is unaffected.
+        getByName("debug").assets.directories.add("$projectDir/schemas")
+    }
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
@@ -101,6 +107,7 @@ dependencies {
     testImplementation(libs.turbine)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.androidx.room.testing)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

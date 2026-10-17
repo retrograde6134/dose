@@ -7,7 +7,7 @@ import ca.alexlittle.dose.domain.model.MedicationForm
 import java.math.BigDecimal
 import java.time.Instant
 
-// Future schedules and dose_logs tables reference id with ON DELETE CASCADE: deleting a
+// schedules (and the future dose_logs) reference id with ON DELETE CASCADE: deleting a
 // medication removes its history, and archiving is how the user keeps it.
 @Entity(tableName = "medications")
 internal data class MedicationEntity(

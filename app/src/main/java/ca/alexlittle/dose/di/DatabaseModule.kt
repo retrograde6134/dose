@@ -4,8 +4,11 @@ import android.content.Context
 import androidx.room.Room
 import ca.alexlittle.dose.data.db.DoseDatabase
 import ca.alexlittle.dose.data.db.MedicationDao
+import ca.alexlittle.dose.data.db.ScheduleDao
 import ca.alexlittle.dose.data.repository.RoomMedicationRepository
+import ca.alexlittle.dose.data.repository.RoomScheduleRepository
 import ca.alexlittle.dose.domain.repository.MedicationRepository
+import ca.alexlittle.dose.domain.repository.ScheduleRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -25,6 +28,9 @@ internal object DatabaseModule {
 
     @Provides
     fun provideMedicationDao(database: DoseDatabase): MedicationDao = database.medicationDao()
+
+    @Provides
+    fun provideScheduleDao(database: DoseDatabase): ScheduleDao = database.scheduleDao()
 }
 
 @Module
@@ -32,4 +38,7 @@ internal object DatabaseModule {
 internal interface RepositoryModule {
     @Binds
     fun bindMedicationRepository(impl: RoomMedicationRepository): MedicationRepository
+
+    @Binds
+    fun bindScheduleRepository(impl: RoomScheduleRepository): ScheduleRepository
 }
