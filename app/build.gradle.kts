@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.dose"
+    namespace = "ca.alexlittle.dose"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.example.dose"
+        applicationId = "ca.alexlittle.dose"
         minSdk = 24
         targetSdk = 37
         versionCode = 1

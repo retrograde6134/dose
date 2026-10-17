@@ -1,4 +1,4 @@
-package com.example.dose
+package ca.alexlittle.dose
 
 import org.junit.Test
 
