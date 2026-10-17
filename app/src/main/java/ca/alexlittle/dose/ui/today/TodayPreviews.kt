@@ -11,6 +11,42 @@ import ca.alexlittle.dose.ui.theme.DoseTheme
 @Composable
 private fun TodayScreenEmptyPreview() {
     DoseTheme {
-        TodayScreen(uiState = TodayUiState.Empty, onOpenMedications = {})
+        TodayScreen(
+            uiState = TodayUiState(loading = false),
+            reminderProblem = null,
+            onFixReminderProblem = {},
+            onDismissReminderProblem = {},
+            onOpenMedications = {},
+        )
+    }
+}
+
+@Preview(name = "Notifications off")
+@Preview(name = "Notifications off, dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "Notifications off, 200% font", fontScale = 2f)
+@Composable
+private fun TodayScreenNotificationsOffPreview() {
+    DoseTheme {
+        TodayScreen(
+            uiState = TodayUiState(loading = false, hasReminders = true),
+            reminderProblem = ReminderProblem.NOTIFICATIONS_OFF,
+            onFixReminderProblem = {},
+            onDismissReminderProblem = {},
+            onOpenMedications = {},
+        )
+    }
+}
+
+@Preview(name = "Alarms inexact")
+@Composable
+private fun TodayScreenAlarmsInexactPreview() {
+    DoseTheme {
+        TodayScreen(
+            uiState = TodayUiState(loading = false, hasReminders = true),
+            reminderProblem = ReminderProblem.ALARMS_INEXACT,
+            onFixReminderProblem = {},
+            onDismissReminderProblem = {},
+            onOpenMedications = {},
+        )
     }
 }

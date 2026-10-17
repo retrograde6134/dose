@@ -1,5 +1,8 @@
 package ca.alexlittle.dose.ui.schedules.edit
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,11 +28,13 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ca.alexlittle.dose.R
+import ca.alexlittle.dose.reminders.ReminderAccess
 import ca.alexlittle.dose.ui.components.BackButton
 import ca.alexlittle.dose.ui.schedules.rememberScheduleFormatter
 import java.time.LocalTime
@@ -38,10 +43,22 @@ import java.time.LocalTime
 internal fun ScheduleEditRoute(onDone: () -> Unit, viewModel: ScheduleEditViewModel, modifier: Modifier = Modifier) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val currentOnDone by rememberUpdatedState(onDone)
+    val context = LocalContext.current
+    // Asked right after the user sets up a reminder, when the reason is obvious. The screen closes
+    // whatever the answer; Today explains how to turn notifications on later.
+    val requestNotifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
+        currentOnDone()
+    }
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
                 ScheduleEditEvent.Done -> currentOnDone()
+
+                ScheduleEditEvent.SavedWithReminders -> if (ReminderAccess.needsNotificationPermission(context)) {
+                    requestNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+                } else {
+                    currentOnDone()
+                }
             }
         }
     }

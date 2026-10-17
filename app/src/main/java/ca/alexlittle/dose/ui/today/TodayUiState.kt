@@ -1,7 +1,10 @@
 package ca.alexlittle.dose.ui.today
 
-internal sealed interface TodayUiState {
-    data object Loading : TodayUiState
+/** [hasReminders] is whether any active schedule sends reminders. */
+internal data class TodayUiState(val loading: Boolean = true, val hasReminders: Boolean = false)
 
-    data object Empty : TodayUiState
+/** Something stopping reminders from arriving on time, most serious first. */
+internal enum class ReminderProblem {
+    NOTIFICATIONS_OFF,
+    ALARMS_INEXACT,
 }

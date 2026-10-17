@@ -90,7 +90,17 @@ internal class ScheduleEditViewModel @AssistedInject constructor(
         _uiState.update { it.copy(saving = true) }
         viewModelScope.launch {
             when (val result = saveSchedule(state.toDraft(quantity))) {
-                is SaveScheduleResult.Saved, SaveScheduleResult.NotFound -> _events.send(ScheduleEditEvent.Done)
+                is SaveScheduleResult.Saved -> _events.send(
+                    if (state.kind ==
+                        ScheduleKind.AS_NEEDED
+                    ) {
+                        ScheduleEditEvent.Done
+                    } else {
+                        ScheduleEditEvent.SavedWithReminders
+                    },
+                )
+
+                SaveScheduleResult.NotFound -> _events.send(ScheduleEditEvent.Done)
 
                 is SaveScheduleResult.Invalid -> _uiState.update {
                     it.copy(saving = false, errors = result.errors.mapNotNullTo(mutableSetOf(), ::toEditError))

@@ -1,5 +1,7 @@
 package ca.alexlittle.dose.ui.schedules
 
+import android.Manifest
+import android.os.Build
 import android.text.format.DateFormat
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
@@ -50,6 +52,7 @@ import java.time.LocalTime
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -89,6 +92,15 @@ class AddScheduleTest {
         notifier,
         clock,
     )
+
+    // Otherwise saving a schedule with reminders stops at the system notification-permission dialog.
+    @Before
+    fun grantNotifications() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            InstrumentationRegistry.getInstrumentation().uiAutomation
+                .grantRuntimePermission(context.packageName, Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
 
     @After
     fun tearDown() {

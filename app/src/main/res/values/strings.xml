@@ -3,6 +3,13 @@
     <string name="today_title">Today</string>
     <string name="today_empty">Nothing scheduled for today.</string>
     <string name="today_open_medications">Medications</string>
+    <string name="reminders_off_title">Reminders are off</string>
+    <string name="reminders_off_body">Dose can\'t remind you to take your medication until notifications are turned on.</string>
+    <string name="reminders_off_fix">Turn on</string>
+    <string name="reminders_late_title">Reminders may be late</string>
+    <string name="reminders_late_body">Allow alarms and reminders so Dose can remind you on time.</string>
+    <string name="reminders_late_fix">Allow</string>
+    <string name="reminders_problem_dismiss">Not now</string>
 
     <string name="navigate_back">Back</string>
 

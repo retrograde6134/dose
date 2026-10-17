@@ -82,8 +82,11 @@ internal sealed interface ScheduleEditAction {
 }
 
 internal sealed interface ScheduleEditEvent {
-    /** Saved, deleted, or the schedule or medication no longer exists. Either way the screen closes. */
+    /** Saved without reminders, deleted, or the schedule or medication no longer exists. The screen closes. */
     data object Done : ScheduleEditEvent
+
+    /** Saved a schedule that sends reminders: ask for notification permission if needed, then close. */
+    data object SavedWithReminders : ScheduleEditEvent
 }
 
 /** Limits for the steppers, which keep every count valid so the domain never sees zero or negatives. */

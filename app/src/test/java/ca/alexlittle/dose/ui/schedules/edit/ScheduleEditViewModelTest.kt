@@ -116,7 +116,7 @@ class ScheduleEditViewModelTest {
 
         viewModel.events.test {
             viewModel.onAction(ScheduleEditAction.Save)
-            assertEquals(ScheduleEditEvent.Done, awaitItem())
+            assertEquals(ScheduleEditEvent.SavedWithReminders, awaitItem())
         }
         val saved = schedules.all.single()
         assertEquals(medicationId, saved.medicationId)
@@ -131,7 +131,11 @@ class ScheduleEditViewModelTest {
         val medicationId = insertMedication()
         val viewModel = viewModel(medicationId)
         viewModel.onAction(ScheduleEditAction.KindChange(ScheduleKind.AS_NEEDED))
-        viewModel.onAction(ScheduleEditAction.Save)
+        viewModel.events.test {
+            viewModel.onAction(ScheduleEditAction.Save)
+            // No reminders, so no reason to ask for notification permission.
+            assertEquals(ScheduleEditEvent.Done, awaitItem())
+        }
 
         val second = viewModel(medicationId)
         second.onAction(ScheduleEditAction.KindChange(ScheduleKind.AS_NEEDED))
