@@ -76,14 +76,3 @@ internal class SaveMedication @Inject constructor(
         return if (saved) SaveMedicationResult.Saved(fields.id) else SaveMedicationResult.NotFound
     }
 }
-
-// stripTrailingZeros alone turns 750 into 7.5E+2, which is not equal to the BigDecimal("750") read back from the DB.
-private fun BigDecimal.normalized(): BigDecimal = stripTrailingZeros().let {
-    if (it.scale() <
-        0
-    ) {
-        it.setScale(0)
-    } else {
-        it
-    }
-}
