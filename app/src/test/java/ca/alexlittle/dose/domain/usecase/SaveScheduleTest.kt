@@ -1,8 +1,7 @@
 package ca.alexlittle.dose.domain.usecase
 
 import ca.alexlittle.dose.domain.model.Recurrence
-import ca.alexlittle.dose.testing.FakeMedicationRepository
-import ca.alexlittle.dose.testing.FakeScheduleRepository
+import ca.alexlittle.dose.testing.ReminderHarness
 import ca.alexlittle.dose.testing.START_DATE
 import ca.alexlittle.dose.testing.medication
 import ca.alexlittle.dose.testing.scheduleDraft
@@ -15,9 +14,10 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class SaveScheduleTest {
-    private val medications = FakeMedicationRepository()
-    private val schedules = FakeScheduleRepository()
-    private val saveSchedule = SaveSchedule(schedules, medications)
+    private val harness = ReminderHarness()
+    private val medications = harness.medications
+    private val schedules = harness.schedules
+    private val saveSchedule = SaveSchedule(schedules, medications, harness.reschedule)
 
     @Test
     fun `rejects invalid drafts with every applicable error`() = runTest {

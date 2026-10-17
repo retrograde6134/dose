@@ -8,8 +8,7 @@ import ca.alexlittle.dose.domain.usecase.DeleteSchedule
 import ca.alexlittle.dose.domain.usecase.ObserveMedication
 import ca.alexlittle.dose.domain.usecase.ObserveSchedule
 import ca.alexlittle.dose.domain.usecase.SaveSchedule
-import ca.alexlittle.dose.testing.FakeMedicationRepository
-import ca.alexlittle.dose.testing.FakeScheduleRepository
+import ca.alexlittle.dose.testing.ReminderHarness
 import ca.alexlittle.dose.testing.fixedClock
 import ca.alexlittle.dose.testing.medication
 import ca.alexlittle.dose.testing.schedule
@@ -30,8 +29,9 @@ class ScheduleEditViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val medications = FakeMedicationRepository()
-    private val schedules = FakeScheduleRepository()
+    private val harness = ReminderHarness()
+    private val medications = harness.medications
+    private val schedules = harness.schedules
 
     private fun viewModel(medicationId: Long, scheduleId: Long = Schedule.NEW_ID, locale: Locale = Locale.CANADA) =
         ScheduleEditViewModel(
@@ -39,8 +39,8 @@ class ScheduleEditViewModelTest {
             scheduleId = scheduleId,
             observeMedication = ObserveMedication(medications),
             observeSchedule = ObserveSchedule(schedules),
-            saveSchedule = SaveSchedule(schedules, medications),
-            deleteSchedule = DeleteSchedule(schedules),
+            saveSchedule = SaveSchedule(schedules, medications, harness.reschedule),
+            deleteSchedule = DeleteSchedule(schedules, harness.notifier, harness.reschedule),
             locale = locale,
             clock = fixedClock(),
         )

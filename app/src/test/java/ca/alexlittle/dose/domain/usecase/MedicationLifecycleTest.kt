@@ -1,7 +1,7 @@
 package ca.alexlittle.dose.domain.usecase
 
 import app.cash.turbine.test
-import ca.alexlittle.dose.testing.FakeMedicationRepository
+import ca.alexlittle.dose.testing.ReminderHarness
 import ca.alexlittle.dose.testing.medication
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -9,11 +9,12 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 class MedicationLifecycleTest {
-    private val repository = FakeMedicationRepository()
+    private val harness = ReminderHarness()
+    private val repository = harness.medications
     private val observeMedications = ObserveMedications(repository)
     private val observeMedication = ObserveMedication(repository)
-    private val setArchived = SetMedicationArchived(repository)
-    private val deleteMedication = DeleteMedication(repository)
+    private val setArchived = SetMedicationArchived(repository, harness.notifier, harness.reschedule)
+    private val deleteMedication = DeleteMedication(repository, harness.notifier, harness.reschedule)
 
     @Test
     fun `observe medications splits active and archived`() = runTest {

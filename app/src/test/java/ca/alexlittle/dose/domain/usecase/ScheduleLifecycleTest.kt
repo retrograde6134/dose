@@ -1,7 +1,7 @@
 package ca.alexlittle.dose.domain.usecase
 
 import app.cash.turbine.test
-import ca.alexlittle.dose.testing.FakeScheduleRepository
+import ca.alexlittle.dose.testing.ReminderHarness
 import ca.alexlittle.dose.testing.schedule
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -9,7 +9,8 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 class ScheduleLifecycleTest {
-    private val repository = FakeScheduleRepository()
+    private val harness = ReminderHarness()
+    private val repository = harness.schedules
 
     @Test
     fun `observeSchedules lists a medication's schedules in insertion order`() = runTest {
@@ -28,7 +29,7 @@ class ScheduleLifecycleTest {
 
         ObserveSchedule(repository)(id).test {
             assertEquals(id, awaitItem()?.id)
-            DeleteSchedule(repository)(id)
+            DeleteSchedule(repository, harness.notifier, harness.reschedule)(id)
             assertNull(awaitItem())
         }
     }

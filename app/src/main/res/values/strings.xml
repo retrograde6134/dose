@@ -178,4 +178,15 @@
     <string name="medication_color_brown">Brown</string>
     <string name="medication_color_grey">Grey</string>
     <string name="medication_color_custom">Custom color</string>
+
+    <!-- Dose reminder notifications -->
+    <string name="notification_channel_reminders">Dose reminders</string>
+    <string name="notification_channel_reminders_description">A reminder when it is time to take a dose</string>
+    <!-- Amount and strength, e.g. "1 tablet · 500 mg" -->
+    <string name="reminder_text">%1$s · %2$s</string>
+    <!-- Shown on the lock screen instead of the medication name -->
+    <string name="reminder_public_title">Time for a dose</string>
+    <string name="reminder_action_taken">Taken</string>
+    <string name="reminder_action_snooze">Snooze</string>
+    <string name="reminder_action_skip">Skip</string>
 </resources>

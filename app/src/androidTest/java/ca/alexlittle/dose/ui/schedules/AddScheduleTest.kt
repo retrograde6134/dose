@@ -19,17 +19,23 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import ca.alexlittle.dose.R
 import ca.alexlittle.dose.data.db.DoseDatabase
+import ca.alexlittle.dose.data.repository.RoomDoseLogRepository
 import ca.alexlittle.dose.data.repository.RoomMedicationRepository
 import ca.alexlittle.dose.data.repository.RoomScheduleRepository
+import ca.alexlittle.dose.domain.model.DoseKey
 import ca.alexlittle.dose.domain.model.Medication
 import ca.alexlittle.dose.domain.model.MedicationForm
 import ca.alexlittle.dose.domain.model.Recurrence
 import ca.alexlittle.dose.domain.model.Schedule
+import ca.alexlittle.dose.domain.reminder.ReminderAlarms
+import ca.alexlittle.dose.domain.reminder.ReminderNotifier
+import ca.alexlittle.dose.domain.schedule.DueDose
 import ca.alexlittle.dose.domain.usecase.DeleteMedication
 import ca.alexlittle.dose.domain.usecase.DeleteSchedule
 import ca.alexlittle.dose.domain.usecase.ObserveMedication
 import ca.alexlittle.dose.domain.usecase.ObserveSchedule
 import ca.alexlittle.dose.domain.usecase.ObserveSchedules
+import ca.alexlittle.dose.domain.usecase.RescheduleReminders
 import ca.alexlittle.dose.domain.usecase.SaveSchedule
 import ca.alexlittle.dose.domain.usecase.SetMedicationArchived
 import ca.alexlittle.dose.ui.medications.detail.MedicationDetailScreen
@@ -59,6 +65,31 @@ class AddScheduleTest {
     private val schedules = RoomScheduleRepository(database.scheduleDao())
     private val clock = Clock.systemDefaultZone()
 
+    // Real alarms and notifications are out of scope here; the reminder pipeline has its own tests.
+    private val notifier = object : ReminderNotifier {
+        override fun show(dose: DueDose, medication: Medication) = Unit
+
+        override fun isShowing(key: DoseKey) = false
+
+        override fun cancel(key: DoseKey) = Unit
+
+        override fun cancelForSchedule(scheduleId: Long) = Unit
+
+        override fun cancelForMedication(medicationId: Long) = Unit
+    }
+    private val reschedule = RescheduleReminders(
+        schedules,
+        RoomDoseLogRepository(database.doseLogDao()),
+        medications,
+        object : ReminderAlarms {
+            override fun arm(at: Instant) = Unit
+
+            override fun cancel() = Unit
+        },
+        notifier,
+        clock,
+    )
+
     @After
     fun tearDown() {
         database.close()
@@ -72,8 +103,8 @@ class AddScheduleTest {
             scheduleId = Schedule.NEW_ID,
             observeMedication = ObserveMedication(medications),
             observeSchedule = ObserveSchedule(schedules),
-            saveSchedule = SaveSchedule(schedules, medications),
-            deleteSchedule = DeleteSchedule(schedules),
+            saveSchedule = SaveSchedule(schedules, medications, reschedule),
+            deleteSchedule = DeleteSchedule(schedules, notifier, reschedule),
             locale = context.resources.configuration.locales[0],
             clock = clock,
         )
@@ -82,8 +113,8 @@ class AddScheduleTest {
             observeMedication = ObserveMedication(medications),
             observeSchedules = ObserveSchedules(schedules),
             clock = clock,
-            setMedicationArchived = SetMedicationArchived(medications),
-            deleteMedication = DeleteMedication(medications),
+            setMedicationArchived = SetMedicationArchived(medications, notifier, reschedule),
+            deleteMedication = DeleteMedication(medications, notifier, reschedule),
         )
         var showingDetail by mutableStateOf(false)
         composeRule.setContent {

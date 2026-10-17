@@ -43,15 +43,18 @@ internal sealed interface SaveScheduleResult {
 internal class SaveSchedule @Inject constructor(
     private val schedules: ScheduleRepository,
     private val medications: MedicationRepository,
+    private val reschedule: RescheduleReminders,
 ) {
     suspend operator fun invoke(draft: ScheduleDraft): SaveScheduleResult {
         val errors = validate(draft)
-        return when {
+        val result = when {
             errors.isNotEmpty() -> SaveScheduleResult.Invalid(errors)
             medications.get(draft.medicationId) == null -> SaveScheduleResult.NotFound
             draft.id == Schedule.NEW_ID -> insert(draft.toSchedule())
             else -> update(draft.toSchedule())
         }
+        if (result is SaveScheduleResult.Saved) reschedule()
+        return result
     }
 
     private suspend fun insert(schedule: Schedule): SaveScheduleResult =

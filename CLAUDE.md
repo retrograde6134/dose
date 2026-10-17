@@ -95,14 +95,18 @@ app/src/main/java/ca/alexlittle/dose/
 ├── domain/
 │   ├── model/                  # Pure Kotlin models (no Android imports)
 │   ├── repository/             # Repository interfaces (implemented in data/repository)
-│   ├── schedule/               # Recurrence engine: schedule -> list of dose instants
+│   ├── reminder/               # Ports for alarms and notifications (implemented in reminders/)
+│   ├── schedule/               # Recurrence engine and ReminderPlanner (what is due, when to wake)
 │   └── usecase/                # TakeDose, SkipDose, SnoozeDose, GetTodayDoses, etc.
 ├── reminders/
-│   ├── AlarmScheduler.kt       # Schedules/cancels exact alarms
+│   ├── AlarmScheduler.kt       # Arms/cancels the single reminder alarm
 │   ├── ReminderReceiver.kt     # Fires on alarm, posts notification
 │   ├── ActionReceiver.kt       # Handles Taken / Snooze / Skip from notification
 │   ├── BootReceiver.kt         # BOOT_COMPLETED, MY_PACKAGE_REPLACED, TIMEZONE/TIME_CHANGED
-│   └── NotificationFactory.kt
+│   ├── NotificationFactory.kt
+│   ├── ReminderNotifications.kt # Shows/finds/cancels reminders by dose identity
+│   ├── ReminderAccess.kt       # Permission state and settings intents
+│   └── DoseIntents.kt          # Dose identity <-> intent data URI / notification tag
 ├── ui/
 │   ├── theme/
 │   ├── navigation/
@@ -138,9 +142,10 @@ Time handling decisions (do not change without discussion):
 ## Scheduling and reminders (the critical part)
 
 - Use `AlarmManager.setExactAndAllowWhileIdle()` / `setAlarmClock()` for dose reminders. Schedule only the **next** upcoming alarm (or a short rolling window, e.g. next 24-48h) and re-arm after each fires. Do not schedule weeks of alarms.
+  - Implemented as one alarm, always armed through `RescheduleReminders`. It looks 48h ahead; if nothing is due in that window but a schedule continues, it wakes at the end of the window to plan again. A fired alarm shows everything due since it was armed. Boot/time/zone changes also catch up on doses due in the last 60 minutes that are not already on screen.
 - Permissions and behavior to handle explicitly:
   - `POST_NOTIFICATIONS` (Android 13+): request with clear rationale; handle denial gracefully with an in-app banner linking to settings.
-  - `SCHEDULE_EXACT_ALARM` / `USE_EXACT_ALARM` (Android 12+): this is a medication reminder, so evaluate `USE_EXACT_ALARM` eligibility honestly and fall back to `canScheduleExactAlarms()` checks with a user-facing prompt otherwise.
+  - `SCHEDULE_EXACT_ALARM` / `USE_EXACT_ALARM` (Android 12+), decided: `SCHEDULE_EXACT_ALARM` with `maxSdkVersion="32"` plus `USE_EXACT_ALARM` for API 33+. Still check `canScheduleExactAlarms()` and fall back to an inexact alarm, with a Today banner linking to settings. Play may require a policy declaration for `USE_EXACT_ALARM`.
   - Battery optimization / OEM background killers: provide a one-time, dismissible, non-naggy help screen explaining how to exempt the app. Link to dontkillmyapp.com as reference.
   - `RECEIVE_BOOT_COMPLETED`: re-arm everything on boot, app update, timezone change, and manual time change.
 - Notification channels: separate channels for dose reminders (high importance), re-reminders, and low-supply. The user controls sound/vibration through the system channel settings; link to them.
@@ -227,8 +232,8 @@ A task is done when:
 - Room 2.x (not Room 3)
 - Auto Backup off
 - detekt 2.0.0-alpha until 2.0 stable ships, then upgrade
+- Exact alarms: `SCHEDULE_EXACT_ALARM` (maxSdk 32) + `USE_EXACT_ALARM` (API 33+), with an inexact fallback
 
 ## Open decisions (ask the owner before assuming)
 
-- `USE_EXACT_ALARM` vs `SCHEDULE_EXACT_ALARM` strategy
 - Licensing (suggest GPLv3 or Apache-2.0) and distribution (F-Droid / Play Store)
