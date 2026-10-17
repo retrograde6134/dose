@@ -57,14 +57,17 @@ import ca.alexlittle.dose.ui.theme.MedicationPalette
 @Composable
 internal fun MedicationEditRoute(
     onDone: () -> Unit,
+    onAdded: (Long) -> Unit,
     viewModel: MedicationEditViewModel,
     modifier: Modifier = Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val currentOnDone by rememberUpdatedState(onDone)
+    val currentOnAdded by rememberUpdatedState(onAdded)
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
+                is MedicationEditEvent.Added -> currentOnAdded(event.id)
                 MedicationEditEvent.Done -> currentOnDone()
             }
         }
@@ -87,9 +90,14 @@ internal fun MedicationEditRoute(
 }
 
 @Composable
-internal fun MedicationEditRoute(medicationId: Long, onDone: () -> Unit, modifier: Modifier = Modifier) {
+internal fun MedicationEditRoute(
+    medicationId: Long,
+    onDone: () -> Unit,
+    onAdded: (Long) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val viewModel = hiltViewModel<MedicationEditViewModel, MedicationEditViewModel.Factory> { it.create(medicationId) }
-    MedicationEditRoute(onDone = onDone, viewModel = viewModel, modifier = modifier)
+    MedicationEditRoute(onDone = onDone, onAdded = onAdded, viewModel = viewModel, modifier = modifier)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

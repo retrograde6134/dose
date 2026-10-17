@@ -57,7 +57,7 @@ class MedicationEditViewModelTest {
     }
 
     @Test
-    fun `valid save inserts and closes the screen`() = runTest {
+    fun `valid save inserts and moves on to the new medication`() = runTest {
         val viewModel = viewModel()
         viewModel.onNameChange("Metformin")
         viewModel.onStrengthChange("500")
@@ -66,12 +66,25 @@ class MedicationEditViewModelTest {
 
         viewModel.events.test {
             viewModel.onSave()
-            assertEquals(MedicationEditEvent.Done, awaitItem())
+            assertEquals(MedicationEditEvent.Added(repository.all.single().id), awaitItem())
         }
         val saved = repository.all.single()
         assertEquals("Metformin", saved.name)
         assertEquals(BigDecimal("500"), saved.strengthValue)
         assertEquals(MedicationForm.CAPSULE, saved.form)
+    }
+
+    @Test
+    fun `saving an edit closes the screen`() = runTest {
+        val id = repository.insert(medication(name = "Metformin"))
+        val viewModel = viewModel(id)
+        viewModel.onNameChange("Metformin XR")
+
+        viewModel.events.test {
+            viewModel.onSave()
+            assertEquals(MedicationEditEvent.Done, awaitItem())
+        }
+        assertEquals("Metformin XR", repository.all.single().name)
     }
 
     @Test

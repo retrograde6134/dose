@@ -28,7 +28,6 @@ import java.util.Locale
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -48,16 +47,16 @@ class AddMedicationTest {
     }
 
     @Test
-    fun addingAMedicationSavesItAndCloses() {
+    fun addingAMedicationSavesItAndMovesOnToIt() {
         val viewModel = MedicationEditViewModel(
             medicationId = Medication.NEW_ID,
             observeMedication = ObserveMedication(repository),
             saveMedication = SaveMedication(repository, Clock.systemUTC()),
             locale = Locale.US,
         )
-        var done = false
+        var addedId: Long? = null
         composeRule.setContent {
-            DoseTheme { MedicationEditRoute(onDone = { done = true }, viewModel = viewModel) }
+            DoseTheme { MedicationEditRoute(onDone = {}, onAdded = { addedId = it }, viewModel = viewModel) }
         }
 
         textField(R.string.medication_name_label).performTextInput("Metformin")
@@ -70,9 +69,8 @@ class AddMedicationTest {
             .performScrollTo()
             .performClick()
 
-        composeRule.waitUntil { done }
-        val saved = runBlocking { repository.get(1) }
-        assertTrue(done)
+        composeRule.waitUntil { addedId != null }
+        val saved = runBlocking { repository.get(checkNotNull(addedId)) }
         assertEquals("Metformin", saved?.name)
         assertEquals(BigDecimal("0.5"), saved?.strengthValue)
         assertEquals("mg", saved?.strengthUnit)

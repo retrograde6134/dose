@@ -57,6 +57,14 @@ internal fun DoseNavHost(modifier: Modifier = Modifier) {
             MedicationEditRoute(
                 medicationId = entry.toRoute<MedicationEditDestination>().id,
                 onDone = dropUnlessResumed { navController.popBackStack() },
+                // Replace the add screen with the new medication's detail, so Back returns to the list.
+                onAdded = { id ->
+                    if (entry.lifecycle.currentState == Lifecycle.State.RESUMED) {
+                        navController.navigate(MedicationDetailDestination(id)) {
+                            popUpTo<MedicationEditDestination> { inclusive = true }
+                        }
+                    }
+                },
             )
         }
         composable<ScheduleEditDestination> { entry ->

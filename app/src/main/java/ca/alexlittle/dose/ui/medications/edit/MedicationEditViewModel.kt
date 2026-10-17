@@ -90,7 +90,10 @@ internal class MedicationEditViewModel @AssistedInject constructor(
         _uiState.update { it.copy(saving = true) }
         viewModelScope.launch {
             when (val result = saveMedication(state.toDraft(strength))) {
-                is SaveMedicationResult.Saved, SaveMedicationResult.NotFound -> _events.send(MedicationEditEvent.Done)
+                is SaveMedicationResult.Saved ->
+                    _events.send(if (isNew) MedicationEditEvent.Added(result.id) else MedicationEditEvent.Done)
+
+                SaveMedicationResult.NotFound -> _events.send(MedicationEditEvent.Done)
 
                 is SaveMedicationResult.Invalid -> _uiState.update {
                     it.copy(saving = false, errors = result.errors.mapTo(mutableSetOf(), ::toEditError))

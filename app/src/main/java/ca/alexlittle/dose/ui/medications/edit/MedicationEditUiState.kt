@@ -26,7 +26,10 @@ internal enum class MedicationEditError {
 }
 
 internal sealed interface MedicationEditEvent {
-    /** Saved, or the medication no longer exists. Either way the screen closes. */
+    /** A new medication was saved; the screen moves on to it so schedules can be added next. */
+    data class Added(val id: Long) : MedicationEditEvent
+
+    /** An edit was saved, or the medication no longer exists. Either way the screen closes. */
     data object Done : MedicationEditEvent
 }
 
