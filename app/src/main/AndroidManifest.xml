@@ -3,6 +3,8 @@
 
     <!-- API 33+: runtime permission for reminder notifications. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Alarms do not survive a reboot; re-arm them. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!--
         Exact alarms, so a reminder fires on time. API 31-32 only have SCHEDULE_EXACT_ALARM (granted by
         default there, but revocable). API 33+ use USE_EXACT_ALARM, which cannot be revoked; this app's
@@ -41,6 +43,19 @@
         <receiver
             android:name=".reminders.ActionReceiver"
             android:exported="false" />
+
+        <!-- Exported only so the system can deliver these broadcasts; all of them are protected. -->
+        <receiver
+            android:name=".reminders.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
