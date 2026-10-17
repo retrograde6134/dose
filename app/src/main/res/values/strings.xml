@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Dose</string>
+    <string name="today_title">Today</string>
+    <string name="today_empty">Nothing scheduled for today.</string>
 </resources>
