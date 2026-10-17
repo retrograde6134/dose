@@ -51,6 +51,55 @@
     <string name="medication_error_strength_not_positive">Enter an amount above zero</string>
     <string name="medication_error_unit_missing">Enter a unit, like mg</string>
 
+    <!-- Schedules on medication detail -->
+    <string name="schedules_title">Schedules</string>
+    <string name="schedules_empty">No schedule yet.</string>
+    <string name="schedules_add">Add schedule</string>
+
+    <!-- Schedule summary, e.g. "Every day · 8:00 AM, 8:00 PM · 1 tablet" -->
+    <string name="schedule_summary_separator">" · "</string>
+    <string name="schedule_list_separator">", "</string>
+    <string name="schedule_every_day">Every day</string>
+    <plurals name="schedule_every_n_days">
+        <item quantity="one">Every day</item>
+        <item quantity="other">Every %d days</item>
+    </plurals>
+    <!-- %2$s is a list of weekdays, e.g. "Mon, Thu" -->
+    <plurals name="schedule_weekdays_every_n_weeks">
+        <item quantity="one">%2$s</item>
+        <item quantity="other">%2$s, every %1$d weeks</item>
+    </plurals>
+    <!-- e.g. "21 days on, 7 days off" -->
+    <string name="schedule_cycle">%1$s on, %2$s off</string>
+    <plurals name="schedule_days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <string name="schedule_as_needed">As needed</string>
+    <!-- %1$s is a duration, e.g. "4 hours" -->
+    <string name="schedule_min_interval">at least %1$s apart</string>
+    <plurals name="schedule_hours">
+        <item quantity="one">%d hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
+    <plurals name="schedule_minutes">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+    <string name="schedule_starts">Starts %1$s</string>
+    <string name="schedule_until">Until %1$s</string>
+    <string name="schedule_date_range">%1$s to %2$s</string>
+
+    <!-- Amount per dose. ICU message format, not plurals: amounts can be fractions like 0.5, and
+         plural rules for fractions differ by language. # is the formatted amount. -->
+    <string name="dose_quantity_tablet">{0, plural, one {# tablet} other {# tablets}}</string>
+    <string name="dose_quantity_capsule">{0, plural, one {# capsule} other {# capsules}}</string>
+    <string name="dose_quantity_liquid">{0, plural, one {# dose} other {# doses}}</string>
+    <string name="dose_quantity_injection">{0, plural, one {# injection} other {# injections}}</string>
+    <string name="dose_quantity_drops">{0, plural, one {# drop} other {# drops}}</string>
+    <string name="dose_quantity_inhaler">{0, plural, one {# puff} other {# puffs}}</string>
+    <string name="dose_quantity_other">{0, plural, one {# dose} other {# doses}}</string>
+
     <!-- Symbols, the same in every language -->
     <string-array name="medication_unit_suggestions" translatable="false">
         <item>mg</item>

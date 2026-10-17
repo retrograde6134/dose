@@ -44,6 +44,8 @@ internal fun DoseNavHost(modifier: Modifier = Modifier) {
                 medicationId = id,
                 onBack = dropUnlessResumed { navController.popBackStack() },
                 onEdit = dropUnlessResumed { navController.navigate(MedicationEditDestination(id)) },
+                onOpenSchedule = {},
+                onAddSchedule = {},
             )
         }
         composable<MedicationEditDestination> { entry ->

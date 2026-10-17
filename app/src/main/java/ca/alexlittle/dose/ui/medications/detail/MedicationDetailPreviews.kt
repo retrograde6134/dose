@@ -14,10 +14,16 @@ import ca.alexlittle.dose.ui.theme.DoseTheme
 private fun MedicationDetailActivePreview() {
     DoseTheme {
         MedicationDetailScreen(
-            uiState = MedicationDetailUiState.Content(MedicationPreviewData.metformin),
+            uiState = MedicationDetailUiState.Content(
+                MedicationPreviewData.metformin,
+                MedicationPreviewData.metforminSchedules,
+                MedicationPreviewData.today,
+            ),
             snackbarHostState = SnackbarHostState(),
             onBack = {},
             onEdit = {},
+            onOpenSchedule = {},
+            onAddSchedule = {},
             onArchive = {},
             onUnarchive = {},
             onDelete = {},
@@ -30,10 +36,16 @@ private fun MedicationDetailActivePreview() {
 private fun MedicationDetailArchivedPreview() {
     DoseTheme {
         MedicationDetailScreen(
-            uiState = MedicationDetailUiState.Content(MedicationPreviewData.amoxicillin),
+            uiState = MedicationDetailUiState.Content(
+                MedicationPreviewData.amoxicillin,
+                emptyList(),
+                MedicationPreviewData.today,
+            ),
             snackbarHostState = SnackbarHostState(),
             onBack = {},
             onEdit = {},
+            onOpenSchedule = {},
+            onAddSchedule = {},
             onArchive = {},
             onUnarchive = {},
             onDelete = {},

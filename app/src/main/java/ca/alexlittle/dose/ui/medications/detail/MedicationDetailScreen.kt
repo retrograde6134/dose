@@ -49,6 +49,8 @@ internal fun MedicationDetailRoute(
     medicationId: Long,
     onBack: () -> Unit,
     onEdit: () -> Unit,
+    onOpenSchedule: (Long) -> Unit,
+    onAddSchedule: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel = hiltViewModel<MedicationDetailViewModel, MedicationDetailViewModel.Factory> {
@@ -80,6 +82,8 @@ internal fun MedicationDetailRoute(
         snackbarHostState = snackbarHostState,
         onBack = onBack,
         onEdit = onEdit,
+        onOpenSchedule = onOpenSchedule,
+        onAddSchedule = onAddSchedule,
         onArchive = viewModel::onArchive,
         onUnarchive = viewModel::onUnarchive,
         onDelete = { confirmingDelete = true },
@@ -106,12 +110,15 @@ internal fun MedicationDetailScreen(
     snackbarHostState: SnackbarHostState,
     onBack: () -> Unit,
     onEdit: () -> Unit,
+    onOpenSchedule: (Long) -> Unit,
+    onAddSchedule: () -> Unit,
     onArchive: () -> Unit,
     onUnarchive: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val medication = (uiState as? MedicationDetailUiState.Content)?.medication
+    val content = uiState as? MedicationDetailUiState.Content
+    val medication = content?.medication
     Scaffold(
         modifier = modifier,
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -128,7 +135,7 @@ internal fun MedicationDetailScreen(
         },
     ) { innerPadding ->
         // Loading is near-instant from a local database; a spinner would only flicker.
-        if (medication == null) return@Scaffold
+        if (content == null || medication == null) return@Scaffold
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -137,6 +144,13 @@ internal fun MedicationDetailScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Header(medication)
+            ScheduleSection(
+                schedules = content.schedules,
+                form = medication.form,
+                today = content.today,
+                onOpenSchedule = onOpenSchedule,
+                onAddSchedule = onAddSchedule,
+            )
             Details(medication)
             Actions(
                 archived = medication.archived,
